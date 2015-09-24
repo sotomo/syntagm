@@ -1,4 +1,5 @@
 require 'optparse'
+require 'net/http'
 
 options = {}
 
@@ -16,5 +17,35 @@ end
 
 optparse.parse!
 
-p "the sentence is: #{@sentence}" 
-p "max chars: #{@maxchars}" 
+sentence = @sentence
+
+hashTags = @sentence.scan(/\@\w+/)
+urls = URI.extract(@sentence)
+
+extractions = []
+
+hashTags.each { |a| 
+  extractions.push(a) 
+  sentence.slice! a
+}
+
+urls.each { |u| 
+  extractions.push(u) 
+  sentence.slice! u
+}
+
+syntagm = ""
+sentence.split(' ').each { |w| 
+  if(syntagm.length>@maxchars.to_i)
+    extractions.push(syntagm)
+    syntagm=""
+  end
+  syntagm << w
+}
+
+
+p extractions
+
+
+
+
