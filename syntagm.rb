@@ -1,18 +1,13 @@
 require 'optparse'
 require 'net/http'
+require 'json'
+require 'ostruct'
 
-
+Syntagm = Struct.new(:text, :type)
 class Syntagm
-
-  def initialize(text, type)
-    @text = text
-    @type = type
+  def to_json(*a)
+    {:text => self.text.to_s.strip, :type => self.type}.to_json(*a)
   end
-  
-  def wrapup
-      @text=@text.to_s.strip
-  end
-  
 end
 
 
@@ -44,13 +39,13 @@ hashTags.each { |a|
   sentence.slice! a
   if(phrase.length>@maxchars.to_i)
     syntagm = Syntagm.new(phrase, "H")
-    syntagms.push(syntagm)
+    syntagms << syntagm
     phrase=""
   end
   phrase << a << " "
 }
 syntagm = Syntagm.new(phrase, "U")
-syntagms.push(syntagm)
+syntagms << syntagm
 
 
 phrase = ""
@@ -58,31 +53,23 @@ urls.each { |u|
   sentence.slice! u
   if(phrase.length>@maxchars.to_i)
     syntagm = Syntagm.new(phrase, "U")
-    syntagms.push(syntagm)
+    syntagms << syntagm
     phrase=""
   end
   phrase << u << " "
 }
 syntagm = Syntagm.new(phrase, "U")
-syntagms.push(syntagm)
+syntagms << syntagm
 
 phrase = ""
 sentence.split(' ').each { |w| 
   if(phrase.length>@maxchars.to_i)
     syntagm = Syntagm.new(phrase, "S")
-    syntagms.push(syntagm)
+    syntagms << syntagm
     phrase=""
   end
   phrase << w << " "
 }
-syntagms.push(syntagm)
+syntagms << syntagm
 
-syntagms.each { |s|
-    s.wrapup
-}
-
-p syntagms
-
-
-
-
+p syntagms.to_json
