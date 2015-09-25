@@ -1,7 +1,6 @@
 require 'optparse'
 require 'net/http'
 require 'json'
-require 'ostruct'
 
 Syntagm = Struct.new(:text, :type)
 class Syntagm
