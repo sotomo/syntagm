@@ -43,7 +43,7 @@ hashTags.each { |a|
   end
   phrase << a << " "
 }
-syntagm = Syntagm.new(phrase, "U")
+syntagm = Syntagm.new(phrase, "H")
 syntagms << syntagm
 
 
@@ -63,12 +63,13 @@ syntagms << syntagm
 phrase = ""
 sentence.split(' ').each { |w| 
   if(phrase.length>@maxchars.to_i)
-    syntagm = Syntagm.new(phrase, "S")
+    syntagm = Syntagm.new(phrase, "T")
     syntagms << syntagm
     phrase=""
   end
   phrase << w << " "
 }
+syntagm = Syntagm.new(phrase, "T")
 syntagms << syntagm
 
 p syntagms.to_json
